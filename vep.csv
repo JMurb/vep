@@ -1,0 +1,53 @@
+STATE,STATE_ABV,D,R,N,VEP, TOTAL_BALLOTS_COUNTED ,,Primary Parties,Non-voter percent
+Hawaii,HI,"313,044","193,661","516,560","1,038,796","522,236",https://elections.hawaii.gov/election-results/,"516,701",50%
+Oklahoma,OK,"499,599","1,036,213","1,381,347","2,956,347","1,575,000",https://results.okelections.gov/OKER/?elecDate=20241105,"1,566,173",47%
+Arkansas,AR,"396,905","759,241","1,035,341","2,225,513","1,190,172",https://results.enr.clarityelections.com/AR/122502/web.345435/#/summary,"1,182,676",47%
+West Virginia,WV,"214,309","533,556","618,968","1,389,555","770,587",https://results.enr.clarityelections.com/WV/122766/web.345435/#/summary,"762,582",45%
+Texas,TX,"4,835,250","6,393,597","8,752,824","20,152,824","11,400,000",https://results.texas-election.com/races,"11,388,674",43%
+Mississippi,MS,"466,668","747,744","925,783","2,175,783","1,250,000",https://www.sos.ms.gov/elections-voting/election-results,"1,228,008",43%
+Tennessee,TN,"1,056,265","1,966,865","2,265,960","5,345,960","3,080,000",https://www.elections.tn.gov/categories/president/offices,"3,063,942",42%
+Indiana,IN,"1,163,603","1,720,347","2,095,034","5,071,615","2,976,581",https://enr.indianavoters.in.gov/site/index.html,"2,936,677",41%
+Alabama,AL,"772,412","1,462,616","1,581,818","3,851,818","2,270,000",https://www2.alabamavotes.gov/electionNight/statewideResultsByContest.aspx?ecode=1001225,"2,265,090",41%
+New Mexico,NM,"478,802","423,391","630,099","1,558,389","928,290",https://electionresults.sos.nm.gov/,"923,403",40%
+New York,NY,"4,619,195","3,578,899","5,485,751","13,867,180","8,381,429",https://elections.ny.gov/election-results,"8,262,495",40%
+Louisiana,LA,"766,870","1,208,505","1,304,724","3,325,888","2,021,164",https://voterportal.sos.la.gov/graphical,"2,006,975",39%
+Wyoming,WY,"69,527","192,633","171,314","442,437","271,123",https://sos.wyo.gov/Elections/Docs/2024/2024GeneralResults.aspx,"269,048",39%
+California,CA,"9,276,179","6,081,697","9,868,908","26,008,952","16,140,044",https://www.sos.ca.gov/elections/upcoming-elections/general-election-nov-5-2024,"15,865,475",38%
+South Carolina,SC,"1,028,452","1,483,747","1,563,329","4,129,733","2,566,404",https://scvotes.gov/wp-content/uploads/2025/05/Absentee-Voting-History-1998-2024.pdf,"2,548,140",38%
+Kentucky,KY,"704,043","1,337,494","1,272,158","3,365,030","2,092,872",https://vrsws.sos.ky.gov/liveresults/,"2,074,530",38%
+North Dakota,ND,"112,327","246,505","217,526","589,501","371,975",https://results.sos.nd.gov/Default.aspx?map=Cty,"368,155",37%
+Kansas,KS,"544,853","758,802","783,301","2,127,448","1,344,147",https://x.com/KansasSOS/status/1863999888301728225/photo/1,"1,327,591",37%
+Illinois,IL,"3,062,863","2,449,079","3,315,360","9,020,606","5,705,246",https://elections.il.gov/NewDocDisplay.aspx?khDtbt6dhc8zLboSZnz8zqVh5SQVox7uAOAe2nieWDAlNyd4%2btjArHsz9xVXIJ4p6Y57u3FvWw0%2bgnNWdT3uKyV44EJPSNKJqSNPoTMrt%2fmA2Vga9kq1Ze1iXEwZay4hPK3eAEa%2f2we615l6oeLwg6WnqfsqBpfS16M6PmGy9Dt7N1XgkzRcofsjw55Vc%2bpMeEB%2b4sl5i6NDqjYzckAEtSg5JKZ0EWm8,"5,633,310",37%
+Rhode Island,RI,"285,156","214,406","303,744","827,146","523,402",https://elections.ri.gov/elections/previous-election-results,"513,386",37%
+Idaho,ID,"274,972","605,246","528,759","1,446,228","917,469",https://results.voteidaho.gov/turnout.html,"905,057",37%
+District of Columbia,DC,"294,185","21,076","188,481","517,352","328,871",https://electionresults.dcboe.org/election_results/2024-General-Election,"325,869",36%
+Arizona,AZ,"1,582,860","1,770,242","1,961,829","5,389,840","3,428,011",https://azsos.gov/elections/election-information/2024-election-info,"3,390,161",36%
+Alaska,AK,"140,026","184,458","193,631","534,612","340,981",https://www.elections.alaska.gov/enr/,"338,177",36%
+South Dakota,SD,"146,859","272,081","245,479","681,957","436,478",https://electionresults.sd.gov/,"428,922",36%
+Utah,UT,"562,566","883,818","852,693","2,378,578","1,525,885",https://electionresults.utah.gov/results/public/utah/elections/general11052024,"1,488,494",36%
+Missouri,MO,"1,200,599","1,751,986","1,662,988","4,662,988","3,000,000",https://enr.sos.mo.gov/,"2,995,327",36%
+Ohio,OH,"2,533,699","3,180,116","3,096,499","8,947,886","5,851,387",https://www.ohiosos.gov/elections/election-results-and-data/2024-official-election-results/,"5,767,788",35%
+Nevada,NV,"705,197","751,205","773,290","2,261,177","1,487,887",https://silverstateelection.nv.gov/,"1,484,840",34%
+Florida,FL,"4,683,038","6,110,125","5,490,628","16,494,837","11,004,209",https://floridaelectionwatch.gov/CountyReportingStatus,"10,893,752",33%
+Delaware,DE,"289,758","214,351","255,050","773,380","518,330",https://elections.delaware.gov/results/html/index.shtml?electionId=GE2024,"512,912",33%
+Connecticut,CT,"992,053","736,918","877,843","2,666,824","1,788,981",https://ctemspublic.tgstg.net/#/home,"1,759,010",33%
+New Jersey,NJ,"2,220,713","1,968,215","2,106,100","6,428,021","4,321,921",https://www.nj.gov/state/elections/assets/pdf/election-results/2024/2024-official-general-voter-turnout.pdf,"4,272,725",33%
+Nebraska,NE,"369,995","564,816","455,051","1,420,287","965,236",https://sos.nebraska.gov/2024-elections,"952,182",32%
+Massachusetts,MA,"2,126,518","1,251,303","1,650,769","5,163,699","3,512,930",https://electionstats.state.ma.us/,"3,473,668",32%
+Montana,MT,"231,906","352,079","285,541","897,964","612,423",https://electionresults.mt.gov/,"602,990",32%
+Georgia,GA,"2,548,017","2,663,117","2,463,143","7,760,407","5,297,264",https://results.sos.ga.gov/results/public/Georgia/elections/2024NovGen,"5,250,905",32%
+Maryland,MD,"1,902,577","1,035,550","1,356,544","4,419,071","3,062,527",https://elections.maryland.gov/elections/2024/general_Results/county_status_page_root.html,"3,038,334",31%
+Washington,WA,"2,245,849","1,530,923","1,684,012","5,645,581","3,961,569",https://results.vote.wa.gov/results/20241105/turnout.html,"3,924,243",30%
+North Carolina,NC,"2,715,375","2,898,423","2,416,145","8,140,132","5,723,987",https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=FED&contest=0,"5,699,141",30%
+Iowa,IA,"707,278","927,019","691,171","2,365,182","1,674,011",https://electionresults.iowa.gov/IA/122322/web.345435/#/summary,"1,663,506",29%
+Vermont,VT,"235,791","119,395","153,130","526,015","372,885",https://outside.vermont.gov/dept/sos/Elections%20Division/election%20info%20and%20resources/elections%20results%20and%20data/2024%20General%20Election%20Canvass%20Report%20-%20FULL.pdf,"369,422",29%
+Virginia,VA,"2,333,778","2,074,097","1,836,799","6,374,775","4,537,976",https://enr.elections.virginia.gov/results/public/Virginia/elections/2024NovemberGeneral,"4,503,288",29%
+Pennsylvania,PA,"3,423,042","3,543,308","2,829,635","9,904,635","7,075,000",https://www.electionreturns.pa.gov/,"7,058,732",29%
+Oregon,OR,"1,240,600","919,480","900,277","3,208,533","2,308,256",https://results.oregonvotes.gov/,"2,244,493",28%
+Colorado,CO,"1,728,159","1,377,441","1,190,229","4,431,349","3,241,120",https://www.sos.state.co.us/pubs/elections/main.html,"3,192,745",27%
+New Hampshire,NH,"418,488","395,523","291,453","1,122,920","831,467",https://www.sos.nh.gov/2024-general-election-results,"826,189",26%
+Maine,ME,"435,652","377,977","292,246","1,134,693","842,447",https://www.maine.gov/sos/cec/elec/results/index.html,"831,375",26%
+Michigan,MI,"2,736,533","2,816,636","1,938,902","7,645,405","5,706,503",https://mvic.sos.state.mi.us/votehistory/Index?type=C&electionDate=11-5-2024,"5,664,186",25%
+Minnesota,MN,"1,656,979","1,519,032","1,013,395","4,285,809","3,272,414",https://www.sos.mn.gov/about-the-office/news-room/state-canvassing-board-certifies-results-of-the-2024-general-election/,"3,253,920",24%
+Wisconsin,WI,"1,668,229","1,697,626","1,047,682","4,484,824","3,437,142",https://elections.wi.gov/,"3,422,918",23%
+United States,US,,,,"244,666,890","156,766,239",,,

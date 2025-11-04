@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Voter Participation Map</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #map {
+            width: 100vw;
+            height: 100vh;
+        }
+        #file-upload {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 6px;
+            color: white;
+        }
+        #file-upload input {
+            margin-top: 10px;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            min-width: 200px;
+        }
+        .tooltip-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            padding-bottom: 6px;
+        }
+        .tooltip-row {
+            display: flex;
+            align-items: center;
+            margin: 6px 0;
+        }
+        .tooltip-chip {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+        .tooltip-label {
+            flex: 1;
+        }
+        .tooltip-value {
+            font-weight: bold;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="file-upload">
+        <div>Upload vep.csv file:</div>
+        <input type="file" id="csvFile" accept=".csv">
+    </div>
+    <div id="map"></div>
+    <div class="tooltip" id="tooltip" style="display: none;"></div>
+
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoiam11cmIiLCJhIjoiY2xvaDg0NHh1MGR6bTJ0czJodmNhMWoxNCJ9.FuXTCdTbyHhX8sDG2_O5FA';
+
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v11',
+            center: [-98, 38.5],
+            zoom: 3.5
+        });
+
+        const tooltip = document.getElementById('tooltip');
+        let stateData = {};
+
+        // FIPS code to state abbreviation mapping
+        const fipsToState = {
+            '01': 'AL', '02': 'AK', '04': 'AZ', '05': 'AR', '06': 'CA',
+            '08': 'CO', '09': 'CT', '10': 'DE', '11': 'DC', '12': 'FL',
+            '13': 'GA', '15': 'HI', '16': 'ID', '17': 'IL', '18': 'IN',
+            '19': 'IA', '20': 'KS', '21': 'KY', '22': 'LA', '23': 'ME',
+            '24': 'MD', '25': 'MA', '26': 'MI', '27': 'MN', '28': 'MS',
+            '29': 'MO', '30': 'MT', '31': 'NE', '32': 'NV', '33': 'NH',
+            '34': 'NJ', '35': 'NM', '36': 'NY', '37': 'NC', '38': 'ND',
+            '39': 'OH', '40': 'OK', '41': 'OR', '42': 'PA', '44': 'RI',
+            '45': 'SC', '46': 'SD', '47': 'TN', '48': 'TX', '49': 'UT',
+            '50': 'VT', '51': 'VA', '53': 'WA', '54': 'WV', '55': 'WI',
+            '56': 'WY'
+        };
+
+        function blendColors(dPct, rPct, nPct) {
+            // Normalize percentages to sum to 100
+            const total = dPct + rPct + nPct;
+            if (total === 0) return '#333333';
+            
+            const dNorm = dPct / total;
+            const rNorm = rPct / total;
+            const nNorm = nPct / total;
+            
+            // Blue: #0000FF, Red: #FF0000, Yellow: #FFFF00
+            const r = Math.round(255 * rNorm + 255 * nNorm);
+            const g = Math.round(255 * nNorm);
+            const b = Math.round(255 * dNorm);
+            
+            return `rgb(${r}, ${g}, ${b})`;
+        }
+
+        // Load and parse CSV
+        async function loadData() {
+            return new Promise((resolve, reject) => {
+                const fileInput = document.getElementById('csvFile');
+                
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        reject('No file selected');
+                        return;
+                    }
+
+                    Papa.parse(file, {
+                        header: true,
+                        dynamicTyping: true,
+                        skipEmptyLines: true,
+                        complete: function(results) {
+                            console.log('CSV parsed. First row:', results.data[0]);
+                            console.log('Total rows:', results.data.length);
+                            
+                            results.data.forEach(row => {
+                                const stateAbv = row.STATE_ABV?.trim();
+                                if (stateAbv) {
+                                    // Column names are lowercase, and values have commas
+                                    const vepStr = (row.vep || row.VEP || '0').toString().replace(/,/g, '');
+                                    const dStr = (row.d || row.D || '0').toString().replace(/,/g, '');
+                                    const rStr = (row.r || row.R || '0').toString().replace(/,/g, '');
+                                    const nStr = (row.n || row.N || '0').toString().replace(/,/g, '');
+                                    
+                                    const vep = parseFloat(vepStr) || 0;
+                                    const d = parseFloat(dStr) || 0;
+                                    const r = parseFloat(rStr) || 0;
+                                    const n = parseFloat(nStr) || 0;
+
+                                    console.log(`Processing ${stateAbv}: VEP=${vep}, D=${d}, R=${r}, N=${n}`);
+
+                                    const dPct = vep > 0 ? (d / vep) * 100 : 0;
+                                    const rPct = vep > 0 ? (r / vep) * 100 : 0;
+                                    const nPct = vep > 0 ? (n / vep) * 100 : 0;
+
+                                    const blendedColor = blendColors(dPct, rPct, nPct);
+
+                                    stateData[stateAbv] = {
+                                        state: row.STATE,
+                                        color: blendedColor,
+                                        dPct: dPct,
+                                        rPct: rPct,
+                                        nPct: nPct
+                                    };
+                                    
+                                    console.log(`${stateAbv} percentages: D=${dPct.toFixed(1)}%, R=${rPct.toFixed(1)}%, N=${nPct.toFixed(1)}%`);
+                                }
+                            });
+
+                            console.log('Loaded data for states:', Object.keys(stateData));
+                            console.log('Sample state data:', stateData[Object.keys(stateData)[0]]);
+                            document.getElementById('file-upload').style.display = 'none';
+                            resolve();
+                        },
+                        error: function(error) {
+                            console.error('Error parsing CSV:', error);
+                            reject(error);
+                        }
+                    });
+                });
+            });
+        }
+
+        map.on('load', async () => {
+            // Wait for file upload before proceeding
+            await loadData();
+
+            console.log('State data loaded:', stateData);
+
+            // Add state boundaries from Mapbox
+            map.addSource('states', {
+                type: 'vector',
+                url: 'mapbox://mapbox.us_census_states_2015'
+            });
+
+            // Build color expression for Mapbox - use FIPS codes
+            const colorExpression = ['match', ['get', 'STATE_ID']];
+            
+            let matchCount = 0;
+            // Convert state abbreviations to FIPS codes
+            Object.keys(fipsToState).forEach(fipsCode => {
+                const stateAbv = fipsToState[fipsCode];
+                const data = stateData[stateAbv];
+                if (data) {
+                    colorExpression.push(fipsCode, data.color);
+                    matchCount++;
+                    console.log(`Mapped FIPS ${fipsCode} (${stateAbv}) to color ${data.color}`);
+                }
+            });
+            
+            console.log(`Total states mapped: ${matchCount}`);
+            colorExpression.push('#FF00FF'); // magenta default
+
+            console.log('Color expression:', colorExpression);
+
+            // Add fill layer with blended colors
+            map.addLayer({
+                id: 'states-fill',
+                type: 'fill',
+                source: 'states',
+                'source-layer': 'states',
+                paint: {
+                    'fill-color': colorExpression,
+                    'fill-opacity': 0.85
+                }
+            });
+
+            // Add state borders
+            map.addLayer({
+                id: 'states-border',
+                type: 'line',
+                source: 'states',
+                'source-layer': 'states',
+                paint: {
+                    'line-color': '#000000',
+                    'line-width': 2
+                }
+            });
+
+            // Debug: Log available properties
+            map.on('click', 'states-fill', (e) => {
+                if (e.features.length > 0) {
+                    console.log('State properties:', e.features[0].properties);
+                }
+            });
+
+            // Add hover interaction
+            map.on('mousemove', 'states-fill', (e) => {
+                if (e.features.length > 0) {
+                    const feature = e.features[0];
+                    const fipsCode = feature.properties.STATE_ID;
+                    const stateAbv = fipsToState[fipsCode];
+                    const data = stateData[stateAbv];
+
+                    console.log(`Hover: FIPS=${fipsCode}, StateAbv=${stateAbv}, Data=`, data);
+
+                    if (data) {
+                        map.getCanvas().style.cursor = 'pointer';
+                        
+                        tooltip.style.display = 'block';
+                        tooltip.style.left = (e.point.x + 15) + 'px';
+                        tooltip.style.top = (e.point.y + 15) + 'px';
+                        tooltip.innerHTML = `
+                            <div class="tooltip-title">${data.state}</div>
+                            <div class="tooltip-row">
+                                <span class="tooltip-chip" style="background-color: #0000FF;"></span>
+                                <span class="tooltip-label">Democrats</span>
+                                <span class="tooltip-value">${data.dPct.toFixed(1)}%</span>
+                            </div>
+                            <div class="tooltip-row">
+                                <span class="tooltip-chip" style="background-color: #FF0000;"></span>
+                                <span class="tooltip-label">Republicans</span>
+                                <span class="tooltip-value">${data.rPct.toFixed(1)}%</span>
+                            </div>
+                            <div class="tooltip-row">
+                                <span class="tooltip-chip" style="background-color: #FFFF00;"></span>
+                                <span class="tooltip-label">Non-Voters</span>
+                                <span class="tooltip-value">${data.nPct.toFixed(1)}%</span>
+                            </div>
+                        `;
+                    }
+                }
+            });
+
+            map.on('mouseleave', 'states-fill', () => {
+                map.getCanvas().style.cursor = '';
+                tooltip.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

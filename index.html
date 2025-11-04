@@ -113,39 +113,40 @@
         const csvData = await window.fs.readFile('vep.csv', { encoding: 'utf8' });
         const parsed = Papa.parse(csvData, {
             header: true,
-            skipEmptyLines: true,
-            complete: function(results) {
-                results.data.forEach(row => {
-                    const stateAbv = row.STATE_ABV?.trim();
-                    if (stateAbv) {
-                        // Column names are lowercase, and values have commas
-                        const vepStr = (row.vep || row.VEP || '0').toString().replace(/,/g, '');
-                        const dStr = (row.d || row.D || '0').toString().replace(/,/g, '');
-                        const rStr = (row.r || row.R || '0').toString().replace(/,/g, '');
-                        const nStr = (row.n || row.N || '0').toString().replace(/,/g, '');
-                        
-                        const vep = parseFloat(vepStr) || 0;
-                        const d = parseFloat(dStr) || 0;
-                        const r = parseFloat(rStr) || 0;
-                        const n = parseFloat(nStr) || 0;
+            skipEmptyLines: true
+        });
 
-                        const dPct = vep > 0 ? (d / vep) * 100 : 0;
-                        const rPct = vep > 0 ? (r / vep) * 100 : 0;
-                        const nPct = vep > 0 ? (n / vep) * 100 : 0;
+        parsed.data.forEach(row => {
+            const stateAbv = row.STATE_ABV?.trim();
+            if (stateAbv) {
+                // Column names are lowercase, and values have commas
+                const vepStr = (row.vep || row.VEP || '0').toString().replace(/,/g, '');
+                const dStr = (row.d || row.D || '0').toString().replace(/,/g, '');
+                const rStr = (row.r || row.R || '0').toString().replace(/,/g, '');
+                const nStr = (row.n || row.N || '0').toString().replace(/,/g, '');
+                
+                const vep = parseFloat(vepStr) || 0;
+                const d = parseFloat(dStr) || 0;
+                const r = parseFloat(rStr) || 0;
+                const n = parseFloat(nStr) || 0;
 
-                        const blendedColor = blendColors(dPct, rPct, nPct);
+                const dPct = vep > 0 ? (d / vep) * 100 : 0;
+                const rPct = vep > 0 ? (r / vep) * 100 : 0;
+                const nPct = vep > 0 ? (n / vep) * 100 : 0;
 
-                        stateData[stateAbv] = {
-                            state: row.STATE,
-                            color: blendedColor,
-                            dPct: dPct,
-                            rPct: rPct,
-                            nPct: nPct
-                        };
-                    }
-                });
+                const blendedColor = blendColors(dPct, rPct, nPct);
+
+                stateData[stateAbv] = {
+                    state: row.STATE,
+                    color: blendedColor,
+                    dPct: dPct,
+                    rPct: rPct,
+                    nPct: nPct
+                };
             }
         });
+
+        console.log('Loaded data for states:', Object.keys(stateData));
     } catch (error) {
         console.error('Error loading CSV:', error);
     }
@@ -260,3 +261,4 @@
 </body>
 
 </html>
+

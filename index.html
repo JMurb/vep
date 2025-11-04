@@ -17,19 +17,7 @@
             width: 100vw;
             height: 100vh;
         }
-        #file-upload {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 6px;
-            color: white;
-        }
-        #file-upload input {
-            margin-top: 10px;
-        }
+        
         .tooltip {
             position: absolute;
             background: rgba(0, 0, 0, 0.9);
@@ -71,10 +59,7 @@
     </style>
 </head>
 <body>
-    <div id="file-upload">
-        <div>Upload vep.csv file:</div>
-        <input type="file" id="csvFile" accept=".csv">
-    </div>
+
     <div id="map"></div>
     <div class="tooltip" id="tooltip" style="display: none;"></div>
 
@@ -125,71 +110,47 @@
 
         // Load and parse CSV
         async function loadData() {
-            return new Promise((resolve, reject) => {
-                const fileInput = document.getElementById('csvFile');
-                
-                fileInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    if (!file) {
-                        reject('No file selected');
-                        return;
+    try {
+        const csvData = await window.fs.readFile('vep.csv', { encoding: 'utf8' });
+        const parsed = Papa.parse(csvData, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+                results.data.forEach(row => {
+                    const stateAbv = row.STATE_ABV?.trim();
+                    if (stateAbv) {
+                        // Column names are lowercase, and values have commas
+                        const vepStr = (row.vep || row.VEP || '0').toString().replace(/,/g, '');
+                        const dStr = (row.d || row.D || '0').toString().replace(/,/g, '');
+                        const rStr = (row.r || row.R || '0').toString().replace(/,/g, '');
+                        const nStr = (row.n || row.N || '0').toString().replace(/,/g, '');
+                        
+                        const vep = parseFloat(vepStr) || 0;
+                        const d = parseFloat(dStr) || 0;
+                        const r = parseFloat(rStr) || 0;
+                        const n = parseFloat(nStr) || 0;
+
+                        const dPct = vep > 0 ? (d / vep) * 100 : 0;
+                        const rPct = vep > 0 ? (r / vep) * 100 : 0;
+                        const nPct = vep > 0 ? (n / vep) * 100 : 0;
+
+                        const blendedColor = blendColors(dPct, rPct, nPct);
+
+                        stateData[stateAbv] = {
+                            state: row.STATE,
+                            color: blendedColor,
+                            dPct: dPct,
+                            rPct: rPct,
+                            nPct: nPct
+                        };
                     }
-
-                    Papa.parse(file, {
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true,
-                        complete: function(results) {
-                            console.log('CSV parsed. First row:', results.data[0]);
-                            console.log('Total rows:', results.data.length);
-                            
-                            results.data.forEach(row => {
-                                const stateAbv = row.STATE_ABV?.trim();
-                                if (stateAbv) {
-                                    // Column names are lowercase, and values have commas
-                                    const vepStr = (row.vep || row.VEP || '0').toString().replace(/,/g, '');
-                                    const dStr = (row.d || row.D || '0').toString().replace(/,/g, '');
-                                    const rStr = (row.r || row.R || '0').toString().replace(/,/g, '');
-                                    const nStr = (row.n || row.N || '0').toString().replace(/,/g, '');
-                                    
-                                    const vep = parseFloat(vepStr) || 0;
-                                    const d = parseFloat(dStr) || 0;
-                                    const r = parseFloat(rStr) || 0;
-                                    const n = parseFloat(nStr) || 0;
-
-                                    console.log(`Processing ${stateAbv}: VEP=${vep}, D=${d}, R=${r}, N=${n}`);
-
-                                    const dPct = vep > 0 ? (d / vep) * 100 : 0;
-                                    const rPct = vep > 0 ? (r / vep) * 100 : 0;
-                                    const nPct = vep > 0 ? (n / vep) * 100 : 0;
-
-                                    const blendedColor = blendColors(dPct, rPct, nPct);
-
-                                    stateData[stateAbv] = {
-                                        state: row.STATE,
-                                        color: blendedColor,
-                                        dPct: dPct,
-                                        rPct: rPct,
-                                        nPct: nPct
-                                    };
-                                    
-                                    console.log(`${stateAbv} percentages: D=${dPct.toFixed(1)}%, R=${rPct.toFixed(1)}%, N=${nPct.toFixed(1)}%`);
-                                }
-                            });
-
-                            console.log('Loaded data for states:', Object.keys(stateData));
-                            console.log('Sample state data:', stateData[Object.keys(stateData)[0]]);
-                            document.getElementById('file-upload').style.display = 'none';
-                            resolve();
-                        },
-                        error: function(error) {
-                            console.error('Error parsing CSV:', error);
-                            reject(error);
-                        }
-                    });
                 });
-            });
-        }
+            }
+        });
+    } catch (error) {
+        console.error('Error loading CSV:', error);
+    }
+}
 
         map.on('load', async () => {
             // Wait for file upload before proceeding
@@ -299,4 +260,5 @@
         });
     </script>
 </body>
+
 </html>
